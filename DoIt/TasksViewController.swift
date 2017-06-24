@@ -13,6 +13,8 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var tableView: UITableView!
     
     var tasks : [Task] = []
+    var viewTask = Task()
+    var rowNumber = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +45,13 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+        viewTask = tasks[indexPath.row]
+        rowNumber = indexPath.row
+        performSegue(withIdentifier: "completeTaskSegue", sender: nil)
+    }
+    
     func makeTasks() -> [Task] {
         let task1 = Task()
         task1.name = "Walk the Dog"
@@ -64,8 +73,18 @@ class TasksViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let nextVC = segue.destination as! CreateTaskViewController
-        nextVC.previousVC = self
+        if segue.identifier == "addSegue" {
+            let nextVC = segue.destination as! CreateTaskViewController
+            nextVC.previousVC = self
+        } else {
+            let nextVC = segue.destination as! TaskViewController
+            nextVC.previousVC = self
+            nextVC.task = viewTask
+            nextVC.rowNumber = rowNumber
+            
+            
+        }
+        
     }
 
 }
